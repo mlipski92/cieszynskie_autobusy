@@ -17,7 +17,7 @@ Route::get('/', function () {
     Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::get('/trans/create', CreateTrans::class);
+    Route::get('/trans/create', CreateTrans::class)->name('trans.create');
     Route::get('/trans/list', TransList::class)->name('trans.list');
     Route::get('/trans/{id}/edit', EditTrans::class)->name('trans.edit');
 
