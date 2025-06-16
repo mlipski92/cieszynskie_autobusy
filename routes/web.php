@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Trans\CreateTrans;
+use App\Livewire\Trans\EditTrans;
 use App\Livewire\Trans\TransList;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
@@ -18,6 +19,7 @@ Route::get('/', function () {
 
     Route::get('/trans/create', CreateTrans::class);
     Route::get('/trans/list', TransList::class)->name('trans.list');
+    Route::get('/trans/{id}/edit', EditTrans::class)->name('trans.edit');
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');

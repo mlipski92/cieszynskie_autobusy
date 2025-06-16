@@ -21,10 +21,10 @@ class CreateTrans extends Component
         $this->reset('name');
 
         session()->flash('message', 'Dodano poprawnie!');
+        return redirect()->route('trans.list');
     }
     public function render()
     {
-        // session()->flash('message', 'Test');
         return view('livewire.trans.create-trans');
     }
 }
