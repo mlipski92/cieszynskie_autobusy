@@ -13,6 +13,7 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('trans.list')" :current="request()->routeIs('trans.list')" wire:navigate>{{ __('Lista przewoźników') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('stop.list')" :current="request()->routeIs('stop.list')" wire:navigate>{{ __('Lista przystanków') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('line.list')" :current="request()->routeIs('line.list')" wire:navigate>{{ __('Lista linii') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 

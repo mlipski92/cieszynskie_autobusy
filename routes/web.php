@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Line\CreateLine;
+use App\Livewire\Line\LineList;
 use App\Livewire\Stop\CreateStop;
 use App\Livewire\Stop\EditStop;
 use App\Livewire\Stop\StopList;
@@ -27,6 +29,9 @@ Route::get('/', function () {
     Route::get('/stop/create', CreateStop::class)->name('stop.create');
     Route::get('/stop/list', StopList::class)->name('stop.list');
     Route::get('/stop/{id}/edit', EditStop::class)->name('stop.edit');
+
+    Route::get('/line/create', CreateLine::class)->name('line.create');
+    Route::get('/line/list', LineList::class)->name('line.list');
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
