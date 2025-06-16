@@ -9,6 +9,7 @@ class DeleteButton extends Component
     public string $model;
     public int|string $id;
     public bool $showModal = false;
+    public string $returnRoute;
 
     public function confirmDelete()
     {
@@ -28,7 +29,7 @@ class DeleteButton extends Component
         $record->delete();
 
         session()->flash('message', 'Rekord usunięty.');
-        return redirect()->route('trans.list');
+        return redirect()->route($this->returnRoute);
     }
 
     public function render()
