@@ -48,7 +48,7 @@
             <div>
                 <ul>
                     @foreach($stopList as $stop)
-                        <li class="flex items-center gap-4 py-2 border-b">
+                        <li class="flex items-center gap-4 py-2 border-b bg-[#ece1ce] px-4 mb-1">
                             <span class="flex-1 font-medium">
                                 {{ $stop->name }} <span class="text-sm text-gray-500">(kier.: {{ $stop->direction }})</span>
                             </span>
@@ -93,7 +93,12 @@
                         <td class="px-4 py-2 text-sm text-gray-600">{{ $stop->time }}</td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex gap-[10px] justify-center">
-                                [OPERACJE]
+                                <button
+                                    wire:click="removeStopFromLine({{ $stop->id }})"
+                                    class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded transition"
+                                >
+                                    Usuń
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -124,7 +129,7 @@
     const sortable = new Sortable(document.getElementById('sortable-list'), {
         animation: 150,
         onEnd: function (evt) {
-            console.log(readPositions());
+            // console.log(readPositions());
             // readPositions();
             wire.updateOrder(readPositions());
         }

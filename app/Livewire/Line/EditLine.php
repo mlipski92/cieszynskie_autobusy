@@ -33,12 +33,11 @@ class EditLine extends Component
 public function updateOrder($newOrder)
 {
     foreach ($newOrder as $item) {
-        LineStopRelation::where('id_stop', $item['stopId'])
-            ->where('id_line', $this->lineId)
+        LineStopRelation::where('id', $item['stopId'])
             ->update(['order' => $item['order']]);
     }
 
-    Log::info('Zaktualizowano kolejność przystanków dla linii ' . $this->lineId);
+    session()->flash('success', 'Zmieniono kolejność.');
 }
     public function addStopToLine($id_stop, $id_line, $time, $order) {
         $this->resetErrorBag(); // wyczyść wcześniejsze błędy
@@ -81,11 +80,28 @@ public function updateOrder($newOrder)
         return redirect()->route('line.list');
     }
 
-    public function updatedSearchstop() {
+    public function removeStopFromLine($stopId)
+    {
+        LineStopRelation::where('id_line', $this->lineId)
+            ->where('id_stop', $stopId)
+            ->delete();
+
+        session()->flash('success', 'Przystanek został usunięty z linii.');
+    }
+
+    public function updatedSearchstop()
+    {
         if ($this->searchstop === '') {
             $this->stopList = [];
         } else {
+            // Pobierz już przypisane ID przystanków dla tej linii
+            $assignedStopIds = LineStopRelation::where('id_line', $this->lineId)
+                ->pluck('id_stop')
+                ->toArray();
+
+            // Wyszukaj tylko przystanki, które nie są jeszcze przypisane
             $this->stopList = Stop::where('name', 'like', '%' . $this->searchstop . '%')
+                ->whereNotIn('id', $assignedStopIds)
                 ->orderBy('name')
                 ->limit(10)
                 ->get();
