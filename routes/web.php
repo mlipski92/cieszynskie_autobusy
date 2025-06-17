@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Line\CreateLine;
+use App\Livewire\Line\EditLine;
 use App\Livewire\Line\LineList;
 use App\Livewire\Stop\CreateStop;
 use App\Livewire\Stop\EditStop;
@@ -32,6 +33,7 @@ Route::get('/', function () {
 
     Route::get('/line/create', CreateLine::class)->name('line.create');
     Route::get('/line/list', LineList::class)->name('line.list');
+    Route::get('/line/{id}/edit', EditLine::class)->name('line.edit');
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
