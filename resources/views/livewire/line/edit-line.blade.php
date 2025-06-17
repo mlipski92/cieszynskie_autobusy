@@ -84,21 +84,53 @@
                         <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2 text-sm text-gray-700">1</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Skoczów Bajerki</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Brenna Bukowa</td>
-                        <td class="px-4 py-2 text-sm text-gray-600">12:30</td>
+                <tbody class="bg-white divide-y divide-gray-200" id="sortable-list" x-data x-init="initSortable($el, $wire)">
+                    @foreach($stopsList as $stop)
+                    <tr class="hover:bg-gray-50 transition sortable-item" data-id="{{ $stop->id }}">
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $stop->id }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $stop->stop->name }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $stop->stop->direction }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ $stop->time }}</td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex gap-[10px] justify-center">
                                 [OPERACJE]
                             </div>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+ <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+    window.initSortable = (el, wire) => {
+    const readPositions = () => {
+        const stopElements = document.querySelectorAll("#sortable-list .sortable-item");
+        const stopElementsContainer = document.querySelectorAll("#sortable-list");
+
+        let stopPositions = [];
+        let numeration = 0;
+        // console.log(stopElements);
+        stopElements.forEach( el => {
+            // console.log(el.dataset.id,numeration++);
+            // const newPosition = [stopId: el.dataset.id, order: numeration++];
+            const newPosition = { stopId: el.dataset.id, order: numeration++ };
+            stopPositions.push(newPosition);
+        });
+        return stopPositions;
+
+    }
+    const sortable = new Sortable(document.getElementById('sortable-list'), {
+        animation: 150,
+        onEnd: function (evt) {
+            console.log(readPositions());
+            // readPositions();
+            wire.updateOrder(readPositions());
+        }
+    });
+    }
+
  
+</script>
 </div>

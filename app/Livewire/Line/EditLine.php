@@ -6,6 +6,8 @@ use App\Models\Line;
 use App\Models\LineStopRelation;
 use App\Models\Stop;
 use App\Models\Trans;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
@@ -18,6 +20,7 @@ class EditLine extends Component
     public $searchstop = '';
     public $direction;
     public $times = [];
+    protected $listeners = ['updateOrder'];
     public function mount($id)
     {
         $this->lineId = $id;
@@ -27,6 +30,16 @@ class EditLine extends Component
         $this->direction = $line->direction;
     }
 
+public function updateOrder($newOrder)
+{
+    foreach ($newOrder as $item) {
+        LineStopRelation::where('id_stop', $item['stopId'])
+            ->where('id_line', $this->lineId)
+            ->update(['order' => $item['order']]);
+    }
+
+    Log::info('Zaktualizowano kolejność przystanków dla linii ' . $this->lineId);
+}
     public function addStopToLine($id_stop, $id_line, $time, $order) {
         $this->resetErrorBag(); // wyczyść wcześniejsze błędy
 
@@ -39,7 +52,7 @@ class EditLine extends Component
             $this->addError("times.{$id_stop}", 'Niepoprawny format (HH:MM)');
             return;
         }
-        // logger($validated);
+
         LineStopRelation::create([
             'id_stop' => $id_stop,
             'id_line' => $id_line,
@@ -69,7 +82,6 @@ class EditLine extends Component
     }
 
     public function updatedSearchstop() {
-        logger('szukam: ' . $this->searchstop);
         if ($this->searchstop === '') {
             $this->stopList = [];
         } else {
@@ -80,12 +92,22 @@ class EditLine extends Component
         }
     }
 
+    public function getStopList() {
+        $relations = LineStopRelation::with('stop')
+        ->where('id_line', $this->lineId)
+        ->orderBy('order')
+        ->get();
+
+        return $relations;
+    }
+
     public function render()
     {
         $transList = Trans::all();
         return view('livewire.line.edit-line', [
             'transList' => $transList,
-            'stopList' => $this->stopList
+            'stopList' => $this->stopList,
+            'stopsList' => $this->getStopList()
         ]);
     }
 }
