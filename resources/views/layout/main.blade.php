@@ -17,7 +17,5 @@
     <div class="w-[1000px] bg-white mx-auto">
         @yield('content', 'Default content')
     </div>
-
-    
 </body>
 </html>
