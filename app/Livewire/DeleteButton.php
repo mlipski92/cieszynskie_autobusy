@@ -3,13 +3,20 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\App;
+use App\Repositories\TransRepositoryInterface;
 
 class DeleteButton extends Component
 {
+    public ?string $resource = null;
     public string $model;
     public int|string $id;
     public bool $showModal = false;
     public string $returnRoute;
+
+    protected array $repositoryMap = [
+        'trans' => TransRepositoryInterface::class,
+    ];
 
     public function confirmDelete()
     {
@@ -18,15 +25,13 @@ class DeleteButton extends Component
 
     public function delete()
     {
-        
-        $class = $this->model;
 
-        if (!class_exists($class)) {
-            abort(404, 'Nieprawidłowy model');
+        if (!array_key_exists($this->resource, $this->repositoryMap)) {
+            abort(404, 'Nieprawidłowy zasób');
         }
 
-        $record = $class::findOrFail($this->id);
-        $record->delete();
+        $repository = App::make($this->repositoryMap[$this->resource]);
+        $repository->delete($this->id);
 
         session()->flash('message', 'Rekord usunięty.');
         return redirect()->route($this->returnRoute);

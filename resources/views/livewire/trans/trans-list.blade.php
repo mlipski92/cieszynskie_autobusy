@@ -26,6 +26,7 @@
                         <td class="px-4 py-2 text-center">
                             <div class="flex gap-[10px] justify-center">
                                 @livewire('delete-button', [
+                                    'resource' => 'trans',
                                     'model' => App\Models\Trans::class,
                                     'id' => $trans->id,
                                     'returnRoute' => 'trans.list'

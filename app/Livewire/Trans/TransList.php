@@ -2,19 +2,19 @@
 
 namespace App\Livewire\Trans;
 
+use App\Repositories\TransRepositoryInterface;
 use Livewire\Component;
 use App\Models\Trans;
 
 class TransList extends Component
 {
-    public function delete($id)
-    {
-        Trans::findOrFail($id)->delete();
-        session()->flash('message', 'Rekord został usunięty.');
+    public function mount() {
+        $this->allItems = app(TransRepositoryInterface::class)->getAll();
+        $this->allRecords = $this;
     }
     public function render()
     {
-        $transList = Trans::all();
+        $transList = $this->allItems;
         return view('livewire.trans.trans-list', [
             'transList' => $transList
         ]);

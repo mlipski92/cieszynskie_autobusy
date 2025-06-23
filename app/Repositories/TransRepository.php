@@ -19,4 +19,10 @@ class TransRepository implements TransRepositoryInterface
     {
         return Trans::findOrFail($id);
     }
+    public function getAll() {
+        return Trans::all();
+    }
+    public function delete($id) {
+        return Trans::findOrFail($id)->delete();
+    }
 }
