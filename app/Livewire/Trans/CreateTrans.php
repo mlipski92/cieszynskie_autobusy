@@ -2,19 +2,30 @@
 
 namespace App\Livewire\Trans;
 
+use App\Repositories\TransRepositoryInterface;
 use Livewire\Component;
 use App\Models\Trans;
 
 class CreateTrans extends Component
 {
     public $name;
+
+    private $transRepository;
+    public function boot(TransRepositoryInterface $transRepository)
+    {
+        $this->transRepository = $transRepository;
+    }
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+        ];
+    }
     public function save()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $this->validate();
 
-        Trans::create([
+        $this->transRepository->create([
             'name' => $this->name,
         ]);
 

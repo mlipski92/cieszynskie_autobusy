@@ -3,28 +3,40 @@
 namespace App\Livewire\Trans;
 
 use App\Models\Trans;
+use App\Repositories\TransRepositoryInterface;
 use Livewire\Component;
 
 class EditTrans extends Component
 {
     public $transId;
     public $name;
+    private $transRepository;
+
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+        ];
+    }
 
     public function mount($id)
     {
         $this->transId = $id;
-        $trans = Trans::findOrFail($id);
-        $this->name = $trans->name;
+        $this->editElement = app(TransRepositoryInterface::class)->findById($id);
+        $this->name = $this->editElement->name;
+    }
+    public function boot(TransRepositoryInterface $transRepository)
+    {
+        $this->transRepository = $transRepository;
     }
 
     public function save()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $this->validate();
 
-        $trans = Trans::findOrFail($this->transId);
-        $trans->update(['name' => $this->name]);
+        $this->transRepository->update([
+            'name' => $this->name,
+        ]);
 
         session()->flash('message', 'Zaktualizowano poprawnie!');
         return redirect()->route('trans.list');
