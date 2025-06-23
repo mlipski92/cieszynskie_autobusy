@@ -36,7 +36,7 @@ class EditTrans extends Component
 
         $this->transRepository->update([
             'name' => $this->name,
-        ]);
+        ], $this->transId);
 
         session()->flash('message', 'Zaktualizowano poprawnie!');
         return redirect()->route('trans.list');

@@ -11,9 +11,9 @@ class TransRepository implements TransRepositoryInterface
     {
         return Trans::create($data);
     }
-    public function update(array $data)
+    public function update(array $data, int $id)
     {
-        return Trans::update($data);
+        return Trans::findOrFail($id)->update($data);
     }
     public function findById($id)
     {

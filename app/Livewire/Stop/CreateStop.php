@@ -3,6 +3,7 @@
 namespace App\Livewire\Stop;
 
 use App\Models\Stop;
+use App\Repositories\StopRepository;
 use Livewire\Component;
 
 class CreateStop extends Component
@@ -11,16 +12,24 @@ class CreateStop extends Component
     public $positionx;
     public $positiony;
     public $direction;
-    public function save()
-    {
-        $this->validate([
+    private $transRepository;
+
+    protected function rules() {
+        return [
             'name' => 'required|string|max:255',
             'positionx' => 'required|string|max:255',
             'positiony' => 'required|string|max:255',
             'direction' => 'required|string|max:255'
-        ]);
+        ];
+    }
+    public function boot(StopRepository $stopRepository) {
+        $this->stopRepository = $stopRepository;
+    }
+    public function save()
+    {
+        $this->validate();
 
-        Stop::create([
+        $this->stopRepository->create([
             'name' => $this->name,
             'positionx' => $this->positionx,
             'positiony' => $this->positiony,

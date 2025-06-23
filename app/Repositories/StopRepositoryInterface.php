@@ -2,8 +2,7 @@
 
 namespace App\Repositories;
 
-interface TransRepositoryInterface
-{
+interface StopRepositoryInterface {
     public function create(array $data);
     public function update(array $data, int $id);
     public function findById($id);

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Repositories\StopRepositoryInterface;
 use Livewire\Component;
 use Illuminate\Support\Facades\App;
 use App\Repositories\TransRepositoryInterface;
@@ -16,6 +17,7 @@ class DeleteButton extends Component
 
     protected array $repositoryMap = [
         'trans' => TransRepositoryInterface::class,
+        'stop' => StopRepositoryInterface::class,
     ];
 
     public function confirmDelete()

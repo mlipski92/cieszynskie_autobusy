@@ -3,19 +3,18 @@
 namespace App\Livewire\Stop;
 
 use App\Models\Stop;
+use App\Repositories\StopRepository;
 use Livewire\Component;
 
 class StopList extends Component
 {
-    public function delete($id)
-    {
-        Stop::findOrFail($id)->delete();
-        session()->flash('message', 'Rekord został usunięty.');
-        return view('livewire.stop.stop-list');
+    protected $stopRepository;
+    public function boot(StopRepository $stopRepository) {
+        $this->stopRepository = $stopRepository;
     }
     public function render()
     {
-        $stopList = Stop::all();
+        $stopList = $this->stopRepository->getAll();
         return view('livewire.stop.stop-list', [
             'stopList' => $stopList
         ]);
