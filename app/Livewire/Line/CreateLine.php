@@ -4,25 +4,34 @@ namespace App\Livewire\Line;
 
 use App\Models\Line;
 use App\Models\Trans;
+use App\Repositories\LineRepository;
 use Livewire\Component;
 
 class CreateLine extends Component
 {
+    protected $lineRepository;
     public $name;
     public $trans;
     public $direction;
-    public function save()
-    {
-        $this->validate([
+    public function boot(LineRepository $lineRepository) {
+        $this->lineRepository = $lineRepository;
+    }
+    protected function rules() {
+        return [
             'name' => 'required|string|max:255',
             'direction' => 'required|string|max:255'
-        ]);
+        ];
+    }
+    public function save()
+    {
+        $this->validate();
 
-        Line::create([
+        $this->lineRepository->create([
             'name' => $this->name,
             'trans' => $this->trans,
             'direction' => $this->direction
         ]);
+
 
         session()->flash('message', 'Dodano poprawnie!');
         return redirect()->route('line.list');
@@ -30,7 +39,7 @@ class CreateLine extends Component
 
     public function render()
     {
-        $transList = Trans::all();
+        $transList = $this->lineRepository->getAll();
         return view('livewire.line.create-line', [
             'transList' => $transList
         ]);

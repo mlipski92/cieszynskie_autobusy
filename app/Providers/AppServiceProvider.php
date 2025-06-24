@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\LineRepository;
+use App\Repositories\LineRepositoryInterface;
 use App\Repositories\StopRepository;
 use App\Repositories\StopRepositoryInterface;
 use App\Repositories\TransRepository;
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(TransRepositoryInterface::class, TransRepository::class);
         $this->app->bind(StopRepositoryInterface::class, StopRepository::class);
+        $this->app->bind(LineRepositoryInterface::class, LineRepository::class);
     }
 
     /**

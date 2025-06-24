@@ -94,7 +94,7 @@
                         <td class="px-4 py-2 text-center">
                             <div class="flex gap-[10px] justify-center">
                                 <button
-                                    wire:click="removeStopFromLine({{ $stop->id }})"
+                                    wire:click="removeStopFromLine({{ $stop->id_stop }})"
                                     class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded transition"
                                 >
                                     Usuń

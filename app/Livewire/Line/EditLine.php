@@ -6,6 +6,8 @@ use App\Models\Line;
 use App\Models\LineStopRelation;
 use App\Models\Stop;
 use App\Models\Trans;
+use App\Repositories\LineRepository;
+use App\Repositories\LineStopRelationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +15,8 @@ use Livewire\Component;
 
 class EditLine extends Component
 {
+    protected $lineRepository;
+    protected $lineStopRelationRepository;
     public $lineId;
     public $name;
     public $trans;
@@ -21,10 +25,14 @@ class EditLine extends Component
     public $direction;
     public $times = [];
     protected $listeners = ['updateOrder'];
+    public function boot(LineRepository $lineRepository, LineStopRelationRepository $lineStopRelationRepository) {
+        $this->lineRepository = $lineRepository;
+        $this->lineStopRelationRepository = $lineStopRelationRepository;
+    }
     public function mount($id)
     {
         $this->lineId = $id;
-        $line = Line::findOrFail($id);
+        $line = $this->lineRepository->findById($id);
         $this->name = $line->name;
         $this->trans = $line->trans;
         $this->direction = $line->direction;
@@ -33,8 +41,7 @@ class EditLine extends Component
 public function updateOrder($newOrder)
 {
     foreach ($newOrder as $item) {
-        LineStopRelation::where('id', $item['stopId'])
-            ->update(['order' => $item['order']]);
+        $this->lineStopRelationRepository->updateRelationOrder($item['stopId'], $item['order']);
     }
 
     session()->flash('success', 'Zmieniono kolejność.');
@@ -52,24 +59,28 @@ public function updateOrder($newOrder)
             return;
         }
 
-        LineStopRelation::create([
+        $this->lineStopRelationRepository->createStopLineRelation([
             'id_stop' => $id_stop,
             'id_line' => $id_line,
             'time' => $time,
             'order' => $order,
         ]);
+
         session()->flash('success', 'Przystanek został dodany do linii.');
         return redirect()->route('line.edit', ['id' => $id_line]);
+    }
+    public function rules() {
+        return [
+            'name' => 'required|string|max:255',
+            'direction' => 'required|string|max:255'
+        ];
     }
 
     public function save()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'direction' => 'required|string|max:255'
-        ]);
+        $this->validate();
 
-        $line = Line::findOrFail($this->lineId);
+        $line = $this->lineRepository->findById($this->lineId);
         $line->update([
             'name' => $this->name, 
             'trans' => $this->trans,
@@ -82,10 +93,7 @@ public function updateOrder($newOrder)
 
     public function removeStopFromLine($stopId)
     {
-        LineStopRelation::where('id_line', $this->lineId)
-            ->where('id_stop', $stopId)
-            ->delete();
-
+        $this->lineStopRelationRepository->removeStopLineRelation($stopId, $this->lineId);
         session()->flash('success', 'Przystanek został usunięty z linii.');
     }
 
@@ -94,32 +102,20 @@ public function updateOrder($newOrder)
         if ($this->searchstop === '') {
             $this->stopList = [];
         } else {
-            // Pobierz już przypisane ID przystanków dla tej linii
-            $assignedStopIds = LineStopRelation::where('id_line', $this->lineId)
-                ->pluck('id_stop')
-                ->toArray();
+            $assignedStopIds = $this->lineStopRelationRepository->getAssignedStops($this->lineId);
 
-            // Wyszukaj tylko przystanki, które nie są jeszcze przypisane
-            $this->stopList = Stop::where('name', 'like', '%' . $this->searchstop . '%')
-                ->whereNotIn('id', $assignedStopIds)
-                ->orderBy('name')
-                ->limit(10)
-                ->get();
+            $this->stopList = $this->lineStopRelationRepository->getAvailableStopList($this->searchstop, $assignedStopIds);
         }
     }
 
     public function getStopList() {
-        $relations = LineStopRelation::with('stop')
-        ->where('id_line', $this->lineId)
-        ->orderBy('order')
-        ->get();
-
+        $relations = $this->lineStopRelationRepository->getStopRelations($this->lineId);
         return $relations;
     }
 
     public function render()
     {
-        $transList = Trans::all();
+        $transList = $this->lineRepository->getAll();
         return view('livewire.line.edit-line', [
             'transList' => $transList,
             'stopList' => $this->stopList,
