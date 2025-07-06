@@ -39,7 +39,8 @@ class CreateLine extends Component
 
     public function render()
     {
-        $transList = $this->lineRepository->getAll();
+        
+        $transList = $this->lineRepository->getAllTrans();
         return view('livewire.line.create-line', [
             'transList' => $transList
         ]);

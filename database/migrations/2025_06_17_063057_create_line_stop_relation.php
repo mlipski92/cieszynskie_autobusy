@@ -17,7 +17,8 @@ return new class extends Migration
             $table->unsignedInteger('id_stop');
             $table->unsignedInteger('id_line');
             $table->time('time');
-            $table->unsignedInteger(column: 'order');
+            $table->unsignedInteger('stopcost');
+            $table->unsignedInteger( 'order');
 
         });
     }

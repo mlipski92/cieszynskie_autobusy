@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LineStopRelation extends Model
 {
-    protected $fillable = ['id_stop', 'id_line', 'time', 'order'];
+    protected $fillable = ['id_stop', 'id_line', 'time', 'stopcost', 'order'];
     protected $table = 'line_stop_relations';
 
     public function stop()

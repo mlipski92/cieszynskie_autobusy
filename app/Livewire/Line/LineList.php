@@ -3,20 +3,26 @@
 namespace App\Livewire\Line;
 
 use App\Models\Line;
+use App\Repositories\LineRepository;
 use Livewire\Component;
 
 class LineList extends Component
 {
+    protected $lineRepository;
+
+    public function boot(LineRepository $lineRepository) {
+        $this->lineRepository = $lineRepository;
+    }
     public function delete($id)
     {
-        Line::findOrFail($id)->delete();
+        $this->lineRepository->delete($id);
         session()->flash('message', 'Rekord został usunięty.');
         return view('livewire.line.line-list');
     }
     
     public function render()
     {
-        $lineList = Line::all();
+        $lineList = $this->lineRepository->getAll();
         return view('livewire.line.line-list', [
             'lineList' => $lineList
         ]);

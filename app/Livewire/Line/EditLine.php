@@ -46,7 +46,7 @@ public function updateOrder($newOrder)
 
     session()->flash('success', 'Zmieniono kolejność.');
 }
-    public function addStopToLine($id_stop, $id_line, $time, $order) {
+    public function addStopToLine($id_stop, $id_line, $time, $order, $stopcost) {
         $this->resetErrorBag(); // wyczyść wcześniejsze błędy
 
         $validator = Validator::make(
@@ -59,11 +59,13 @@ public function updateOrder($newOrder)
             return;
         }
 
+
         $this->lineStopRelationRepository->createStopLineRelation([
             'id_stop' => $id_stop,
             'id_line' => $id_line,
             'time' => $time,
-            'order' => $order,
+            'stopcost' => $stopcost,
+            'order' => $order
         ]);
 
         session()->flash('success', 'Przystanek został dodany do linii.');

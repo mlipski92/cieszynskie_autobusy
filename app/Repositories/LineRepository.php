@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Line;
+use App\Models\Trans;
 
 class LineRepository implements StopRepositoryInterface {
     public function create(array $data) {
@@ -19,5 +20,8 @@ class LineRepository implements StopRepositoryInterface {
     }
     public function delete($id) {
         return Line::findOrFail($id)->delete();
+    }
+    public function getAllTrans() {
+        return Trans::all();
     }
 }
