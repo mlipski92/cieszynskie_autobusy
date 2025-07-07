@@ -13,4 +13,9 @@ class Stop extends Model
     {
         return $this->hasMany(LineStopRelation::class, 'id_stop');
     }
+    public function lineStopRelations()
+    {
+        return $this->hasMany(LineStopRelation::class, 'id_stop');
+    }
+
 }
