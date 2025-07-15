@@ -37,4 +37,27 @@ class LineStopRelationRepository implements LineStopRelationRepositoryInterface 
         ->orderBy('order')
         ->get();
     }
+    public function checkRelationsByLineIds($ids) {
+        return LineStopRelation::whereIn('id_line', $ids)->pluck('id_stop')->unique()->toArray();
+    }
+    public function checkDuplicatedStopInLine($idBegin, $idEnd) {
+        return LineStopRelation::whereIn('id_stop', [$idBegin, $idEnd])->pluck('id_line')->duplicates()->first();
+    }
+    public function getStopLineRelationById($id, $idBegin, $idEnd) {
+        $linesStops = LineStopRelation::where('id_line', $id)
+            ->leftJoin('stops', 'line_stop_relations.id_stop', '=', 'stops.id')
+            ->orderBy('line_stop_relations.order')
+            ->get([
+                'line_stop_relations.*',
+                'stops.name as stop_name'
+            ]);
+        $beginStop = $linesStops->firstWhere('id_stop', $idBegin);
+        $endStop = $linesStops->firstWhere('id_stop', $idEnd);
+        return [
+            'lineStops' => $linesStops,
+            'beginStop' => $beginStop,
+            'endStop' => $endStop
+        ];
+    }
+
 }

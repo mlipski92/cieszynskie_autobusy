@@ -20,4 +20,8 @@ class StopRepository implements StopRepositoryInterface {
     public function delete($id) {
         return Stop::findOrFail($id)->delete();
     }
+    public function getStopsByIds($ids) {
+        return Stop::whereIn('id', $ids)->get();
+    }
+
 }

@@ -24,4 +24,14 @@ class LineRepository implements StopRepositoryInterface {
     public function getAllTrans() {
         return Trans::all();
     }
+    public function getLineIds($id) {
+        return Line::whereHas('lineStopRelations', function($query) use ($id) {
+            $query->where('id_stop', $id);
+        })->pluck('id')->toArray();
+    }
+    public function getLineInfoById($id, $extended = null) {
+        return Line::where('id', $id)->first();
+    }
+
+
 }
