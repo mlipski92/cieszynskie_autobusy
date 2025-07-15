@@ -91,8 +91,6 @@
 
 
 
-
-
 <script src="https://unpkg.com/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
 
 <script>
@@ -111,9 +109,9 @@ function stopsSearch() {
             let url = '';
 
             if (option === 'begin') {
-                url = 'http://cieszynskie_autobusy.test/api/stops';
+                url = '{{ config('app.url') }}/api/stops';
             } else if (option === 'end' && selectedId) {
-                url = `http://cieszynskie_autobusy.test/api/stopsbyselectedstop/${selectedId}`;
+                url = `{{ config('app.url') }}/api/stopsbyselectedstop/${selectedId}`;
             } else {
                 console.error('Niepoprawne wywołanie fetchStops');
                 return;
@@ -168,7 +166,7 @@ function stopsSearch() {
             console.log(234);
 
             if (this.selectedBeginId && stop.id) {
-                const url = `http://cieszynskie_autobusy.test/api/getline/${this.selectedBeginId}/${stop.id}`;
+                const url = `{{ config('app.url') }}/api/getline/${this.selectedBeginId}/${stop.id}`;
                 
                 fetch(url)
                     .then(res => res.json())
