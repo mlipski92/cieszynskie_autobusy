@@ -51,17 +51,24 @@ Route::get('/test-trans', function () {
     $accessToken = $data['access_token'];
 
     // Przygotowanie danych transakcji
-$transactionData = [
-    'amount' => 0.1,
-    'description' => 'Test transaction',
-    'groupId' => 150, // ← Przelewy online
-    'payer' => [
-        'email' => 'jan.nowak@example.com',
-        'name' => 'Jan Nowak'
-    ],
-            'returnUrl' => 'http://mateuszlipski.pl', // użytkownik wraca tutaj po płatności
-        'resultUrl' => 'http://mateuszlipski.pl'    // serwer Tpay wysyła tutaj webhook
-];
+    $transactionData = [
+        'amount' => 0.1,
+        'description' => 'Test transaction',
+        'groupId' => 150, // ← Przelewy online
+        'payer' => [
+            'email' => 'jan.nowak@example.com',
+            'name' => 'Jan Nowak'
+        ],
+        'callbacks' => [
+            'notification' => [
+                'url' => 'https://zenitx.pl',
+            ],
+            'payerUrls' => [
+                'success' => 'https://zenitx.pl',
+                'error' => 'https://zenitx.pl',
+            ],
+        ],
+    ];
 
     // Tworzenie transakcji
     $ch = curl_init();
