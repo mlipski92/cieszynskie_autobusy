@@ -3,7 +3,11 @@
 @section('content') 
 
 <div x-data="stopsSearch()" x-init="fetchStops('begin')" class="">
-
+<style>
+    * {
+  color: #000 !important;
+}
+</style>
     <div class="grid grid-cols-2">
         <div class="p-5">
             <label>Z: </label>
