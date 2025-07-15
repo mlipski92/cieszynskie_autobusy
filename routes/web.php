@@ -12,61 +12,79 @@ use App\Livewire\Trans\TransList;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+// use Illuminate\Support\Facades\Route;
+Route::get('/test', function () {
+    return "test";
+});
 Route::get('/', function () {
+    // Dane OAuth
+    $clientId = '01JZNXT3TS2DC0TBKJGPWJV587-01K06FQYM3GVQYN7JVWFXV9TYM';
+    $clientSecret = '36702dd0b89bb1141bb4b7e599d4d55f5d25b7a1d9441da6811641d567c8f7b9';
 
+    // Autoryzacja (Basic Auth do tokenu)
+    $auth = base64_encode("$clientId:$clientSecret");
 
-
-
-// Dane dostępowe do Tpay (Client ID i Client Secret)
-$clientId = '01JZNXT3TS2DC0TBKJGPWJV587-01K06FQYM3GVQYN7JVWFXV9TYM';
-$clientSecret = '36702dd0b89bb1141bb4b7e599d4d55f5d25b7a1d9441da6811641d567c8f7b9';
-
-// Tworzymy połączenie cURL
-$ch = curl_init();
-
-// Ustawiamy podstawową autoryzację (Basic Auth)
-$auth = base64_encode("$clientId:$clientSecret");
-
-curl_setopt($ch, CURLOPT_URL, 'https://api.tpay.com/oauth/auth');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-
-// Ustawiamy nagłówki
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Basic ' . $auth,
-    'Content-Type: application/x-www-form-urlencoded',
-]);
-
-// Treść zapytania (grant_type wymagany przez Tpay OAuth2)
-curl_setopt($ch, CURLOPT_POSTFIELDS, 'grant_type=client_credentials');
-
-// Wysyłamy zapytanie i pobieramy odpowiedź
-$response = curl_exec($ch);
-
-if (curl_errno($ch)) {
-    echo 'Błąd: ' . curl_error($ch);
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => 'https://api.tpay.com/oauth/auth',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Basic ' . $auth,
+            'Content-Type: application/x-www-form-urlencoded',
+        ],
+        CURLOPT_POSTFIELDS => 'grant_type=client_credentials',
+    ]);
+    $response = curl_exec($ch);
     curl_close($ch);
-    exit;
-}
 
-curl_close($ch);
+    $data = json_decode($response, true);
+    if (!isset($data['access_token'])) {
+        return 'Błąd przy pobieraniu access_token: ' . print_r($data, true);
+    }
 
-// Przetwarzamy odpowiedź JSON
-$data = json_decode($response, true);
+    $accessToken = $data['access_token'];
 
-if (isset($data['access_token'])) {
-    echo "Access token: " . $data['access_token'];
-} else {
-    echo "Błąd przy pobieraniu access_token: ";
-    print_r($data);
-}
+    // Przygotowanie danych transakcji
+$transactionData = [
+    'amount' => 0.1,
+    'description' => 'Test transaction',
+    'groupId' => 150, // ← Przelewy online
+    'payer' => [
+        'email' => 'jan.nowak@example.com',
+        'name' => 'Jan Nowak'
+    ],
+            'returnUrl' => 'http://mateuszlipski.pl', // użytkownik wraca tutaj po płatności
+        'resultUrl' => 'http://mateuszlipski.pl'    // serwer Tpay wysyła tutaj webhook
+];
 
+    // Tworzenie transakcji
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => 'https://api.tpay.com/transactions',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_POSTFIELDS => json_encode($transactionData),
+    ]);
 
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
+    $result = json_decode($response, true);
+// dd($httpCode);
+    if ($httpCode !== 200 || !isset($result['transactionPaymentUrl'])) {
+        return "Błąd podczas tworzenia transakcji:<br><pre>" . print_r($result, true) . '</pre>';
+    }
 
+    // Przekierowanie użytkownika do strony płatności
+   return redirect()->away($result['transactionPaymentUrl']);
+});
 
-    return view('home');
-})->name('home');
 
     Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
