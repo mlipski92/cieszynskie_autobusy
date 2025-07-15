@@ -2,60 +2,63 @@
 
 @section('content') 
 
-<div x-data="stopsSearch()" x-init="fetchStops('begin')">
+<div x-data="stopsSearch()" x-init="fetchStops('begin')" class="">
 
-    <div class="p-5">
-        <label>Z: </label>
-        <div class="relative w-100">
-            <input 
-                type="text" 
-                x-model="queryBegin" 
-                @input="filterStops('begin')"
-                placeholder="Wpisz nazwę przystanku..."
-                class="w-full border rounded p-2"
-                name="stopbegin"
-            >
-            <div 
-                x-show="filteredStopsBegin.length > 0" 
-                class="absolute bg-white border w-full mt-1 max-h-48 overflow-auto z-10"
-            >
-                <template x-for="stop in filteredStopsBegin" :key="stop.id">
-                    <div 
-                        class="p-2 hover:bg-gray-100 cursor-pointer" 
-                        @click="selectStopBegin(stop)"
-                        x-text="stop.name"
-                    ></div>
-                </template>
+    <div class="grid grid-cols-2">
+        <div class="p-5">
+            <label>Z: </label>
+            <div class="relative w-100">
+                <input 
+                    type="text" 
+                    x-model="queryBegin" 
+                    @input="filterStops('begin')"
+                    placeholder="Wpisz nazwę przystanku..."
+                    class="w-full border rounded p-2"
+                    name="stopbegin"
+                >
+                <div 
+                    x-show="filteredStopsBegin.length > 0" 
+                    class="absolute bg-white border w-full mt-1 max-h-48 overflow-auto z-10"
+                >
+                    <template x-for="stop in filteredStopsBegin" :key="stop.id">
+                        <div 
+                            class="p-2 hover:bg-gray-100 cursor-pointer" 
+                            @click="selectStopBegin(stop)"
+                            x-text="stop.name"
+                        ></div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pole Do -->
+        <div class="p-5">
+            <label>Do: </label>
+            <div class="relative w-100">
+                <input 
+                    type="text" 
+                    x-model="queryEnd" 
+                    @input="filterStops('end')"
+                    placeholder="Wpisz nazwę przystanku..."
+                    class="w-full border rounded p-2"
+                    name="stopend"
+                >
+                <div 
+                    x-show="filteredStopsEnd.length > 0" 
+                    class="absolute bg-white border w-full mt-1 max-h-48 overflow-auto z-10"
+                >
+                    <template x-for="stop in filteredStopsEnd" :key="stop.id">
+                        <div 
+                            class="p-2 hover:bg-gray-100 cursor-pointer" 
+                            @click="selectStopEnd(stop)"
+                            x-text="stop.name"
+                        ></div>
+                    </template>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Pole Do -->
-    <div class="p-5">
-        <label>Do: </label>
-        <div class="relative w-100">
-            <input 
-                type="text" 
-                x-model="queryEnd" 
-                @input="filterStops('end')"
-                placeholder="Wpisz nazwę przystanku..."
-                class="w-full border rounded p-2"
-                name="stopend"
-            >
-            <div 
-                x-show="filteredStopsEnd.length > 0" 
-                class="absolute bg-white border w-full mt-1 max-h-48 overflow-auto z-10"
-            >
-                <template x-for="stop in filteredStopsEnd" :key="stop.id">
-                    <div 
-                        class="p-2 hover:bg-gray-100 cursor-pointer" 
-                        @click="selectStopEnd(stop)"
-                        x-text="stop.name"
-                    ></div>
-                </template>
-            </div>
-        </div>
-    </div>
 
     <div class="p-5" x-show="lineData">
     <table class="table-auto border w-full">
