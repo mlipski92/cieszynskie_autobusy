@@ -16,7 +16,12 @@ use Livewire\Volt\Volt;
 Route::get('/test', function () {
     return "test";
 });
+
 Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+Route::get('/test-trans', function () {
     // Dane OAuth
     $clientId = '01JZNXT3TS2DC0TBKJGPWJV587-01K06FQYM3GVQYN7JVWFXV9TYM';
     $clientSecret = '36702dd0b89bb1141bb4b7e599d4d55f5d25b7a1d9441da6811641d567c8f7b9';
