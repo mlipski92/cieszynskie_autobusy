@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'tpay' => [
+        'client_id' => env('TPAY_CLIENT_ID'),
+        'client_secret' => env('TPAY_CLIENT_SECRET'),
+    ],
 
 ];

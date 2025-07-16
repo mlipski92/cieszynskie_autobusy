@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FrontController;
 use App\Livewire\Line\CreateLine;
 use App\Livewire\Line\EditLine;
 use App\Livewire\Line\LineList;
@@ -17,6 +18,10 @@ Route::get('/test', function () {
     return "test";
 });
 
+Route::get('/kup-bilet', [FrontController::class, 'buyTicket'])->name('bilet.kup');
+Route::get('/success', [FrontController::class, 'successPage'])->name('success');
+
+Route::post('/checkout', [FrontController::class, 'checkout']);
 Route::get('/', function () {
     return view('home');
 })->name('home');

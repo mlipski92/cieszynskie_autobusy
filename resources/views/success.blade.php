@@ -1,0 +1,1 @@
+<h1>Dziękujemy za dokonanie wpłaty!</h1>

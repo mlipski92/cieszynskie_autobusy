@@ -85,7 +85,14 @@
                 <td class="border p-2" x-text="lineData.locationTo"></td>
                 <td class="border p-2" x-text="lineData.totalCost"></td>
                 <td class="border p-2" x-text="lineData.lineName"></td>
-                <td class="border p-2"><a href="">Kup bilet</a></td>
+                <td class="border p-2">
+                    <a 
+                        class="text-blue-500 underline"
+                        :href="`{{ route('bilet.kup') }}?odjazd=${encodeURIComponent(lineData.timeFrom)}&przyjazd=${encodeURIComponent(lineData.timeTo)}&z=${encodeURIComponent(lineData.locationFrom)}&do=${encodeURIComponent(lineData.locationTo)}&koszt=${encodeURIComponent(lineData.totalCost)}&linia=${encodeURIComponent(lineData.lineName)}`"
+                    >
+                        Kup bilet
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
