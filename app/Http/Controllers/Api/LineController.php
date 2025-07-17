@@ -31,6 +31,9 @@ class LineController extends Controller
             }
         }
 
+        if ($totalStopCost === 0 || $totalStopCost === "0") {
+            return [];
+        }
         return [
             'timeFrom' => $getLineStops['beginStop']->time,
             'timeTo' => $getLineStops['endStop']->time,

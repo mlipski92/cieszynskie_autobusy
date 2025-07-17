@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-
+    <div class="p-5" x-show="lineData == null && queryEnd !== '' && queryBegin !== ''">Nie odnaleziono linii</div>
 
     <div class="p-5" x-show="lineData">
     <table class="table-auto border w-full">
@@ -146,10 +146,13 @@ function stopsSearch() {
                     this.filteredStopsBegin = [];
                     return;
                 }
+                
 
                 this.filteredStopsBegin = this.stopsBegin.filter(stop => 
                     stop.name.toLowerCase().includes(this.queryBegin.toLowerCase())
                 );
+
+                
 
             } else if (option === 'end') {
                 if (this.queryEnd.length === 0) {
@@ -160,6 +163,7 @@ function stopsSearch() {
                 this.filteredStopsEnd = this.stopsEnd.filter(stop => 
                     stop.name.toLowerCase().includes(this.queryEnd.toLowerCase())
                 );
+                
             }
         },
 
@@ -174,7 +178,7 @@ function stopsSearch() {
         selectStopEnd(stop) {
             this.queryEnd = stop.name;
             this.filteredStopsEnd = [];
-            console.log(234);
+
 
             if (this.selectedBeginId && stop.id) {
                 const url = `{{ config('app.url') }}/api/getline/${this.selectedBeginId}/${stop.id}`;
@@ -182,9 +186,14 @@ function stopsSearch() {
                 fetch(url)
                     .then(res => res.json())
                     .then(data => {
-                       
-                        this.lineData = data;
-                         console.log(this.lineData);
+                       console.log();
+                       if (Array.isArray(data) && data.length === 0) {
+                            this.lineData = null;
+                       } else {
+                            this.lineData = data;
+                       }
+                        
+                         
                     })
                     .catch(err => console.error('Błąd pobierania danych linii:', err));
             }
