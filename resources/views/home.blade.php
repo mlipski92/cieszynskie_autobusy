@@ -186,7 +186,7 @@ function stopsSearch() {
                 fetch(url)
                     .then(res => res.json())
                     .then(data => {
-                       console.log();
+                       console.log(data);
                        if (Array.isArray(data) && data.length === 0) {
                             this.lineData = null;
                        } else {

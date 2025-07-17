@@ -10,13 +10,39 @@ use App\Livewire\Stop\StopList;
 use App\Livewire\Trans\CreateTrans;
 use App\Livewire\Trans\EditTrans;
 use App\Livewire\Trans\TransList;
+use App\Models\LineStopRelation;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 // use Illuminate\Support\Facades\Route;
-Route::get('/test', function () {
-    return "test";
-});
+// Route::get('/test', function () {
+//     $matchingLines = App\Models\LineStopRelation::whereIn('id_stop', [2, 4])
+//     ->get()
+//     ->groupBy('id_line')
+//     ->filter(function ($group) {
+//         $stop2 = $group->firstWhere('id_stop', 2);
+//         $stop4 = $group->firstWhere('id_stop', 4);
+//         return $stop2 && $stop4 && $stop2->order < $stop4->order;
+//     });
+
+
+//     $linesStops = LineStopRelation::where('id_line', $id)
+//     ->leftJoin('stops', 'line_stop_relations.id_stop', '=', 'stops.id')
+//     ->orderBy('line_stop_relations.order')
+//     ->get([
+//         'line_stop_relations.*',
+//         'stops.name as stop_name'
+//     ]);
+
+
+
+//     return [
+//     'lineStops' => $linesStops,
+//     'beginStop' => $matchingLines->first()[0],
+//     'endStop' => $matchingLines->first()[1]
+//     ];
+
+// });
 
 Route::get('/kup-bilet', [FrontController::class, 'buyTicket'])->name('bilet.kup');
 Route::get('/success', [FrontController::class, 'successPage'])->name('success');
@@ -25,6 +51,7 @@ Route::post('/checkout', [FrontController::class, 'checkout']);
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
 
 // Route::get('/test-trans', function () {
 //     // Dane OAuth

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\LineRepository;
 use App\Repositories\LineStopRelationRepository;
+use Illuminate\Support\Facades\Log;
 
 class LineController extends Controller
 {
@@ -34,11 +35,14 @@ class LineController extends Controller
         if ($totalStopCost === 0 || $totalStopCost === "0") {
             return [];
         }
+
+        // Log::info();
+
         return [
             'timeFrom' => $getLineStops['beginStop']->time,
             'timeTo' => $getLineStops['endStop']->time,
-            'locationFrom' => $getLineStops['beginStop']->stop_name,
-            'locationTo' => $getLineStops['endStop']->stop_name,
+            'locationFrom' => $getLineStops['beginStop']->name,
+            'locationTo' => $getLineStops['endStop']->name,
             'totalCost' => $totalStopCost,
             'lineName' => $getLineInfoById->name
         ];
