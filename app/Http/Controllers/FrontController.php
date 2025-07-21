@@ -12,7 +12,7 @@ use App\Repositories\OrderRepository;
 class FrontController extends Controller
 {
     protected $orderRepository;
-    public function __contruct(OrderRepository $orderRepository) {
+    public function __construct(OrderRepository $orderRepository) {
         $this->orderRepository = $orderRepository;
     }
     public function buyTicket(Request $request) {
@@ -38,7 +38,7 @@ class FrontController extends Controller
             payerEmail: $request->email,
             successUrl: config('app.url').'/success',
             errorUrl: config('app.url').'/error',
-            notificationUrl: config('app.url').'/check',
+            notificationUrl: config('app.url').'/checkstatus',
         );
         $paymentUrl = $tpayService->createTransaction($transactionData->toArray());
 
@@ -46,12 +46,12 @@ class FrontController extends Controller
             return 'Błąd podczas tworzenia transakcji.';
         }
 
-        $this->orderRepository->create([
+        $this->orderRepository->createOrder([
             "name" => $request->name,
             "line" => $request->lineName,
             "relation" => $request->locationFrom.' - '.$request->locationTo,
             "cost" => $request->totalCost,
-            "externalid" => null
+            "externalid" => 'vvv'
         ]);
 
         return redirect()->away($paymentUrl['transactionPaymentUrl']);

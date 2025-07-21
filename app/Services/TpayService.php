@@ -29,7 +29,7 @@ class TpayService
         return $response->json()['access_token'] ?? null;
     }
 
-    public function createTransaction(array $transactionData): ?string
+    public function createTransaction(array $transactionData): ?array
     {
         $accessToken = $this->getAccessToken();
 
@@ -42,7 +42,7 @@ class TpayService
             ->post('https://api.tpay.com/transactions', $transactionData);
 
         $json = $response->json();
-        dd($json);
+        // dd($json);
 
         return $json ?? null;
     }

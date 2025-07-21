@@ -139,6 +139,7 @@ Route::get('/', function () {
     Route::redirect('settings', 'settings/profile');
 
     Route::get('/order/list', ListOrder::class)->name('order.list');
+    Route::get('/order/checkstatus', ListOrder::class)->name('order.checkstatus');
 
     Route::get('/trans/create', CreateTrans::class)->name('trans.create');
     Route::get('/trans/list', TransList::class)->name('trans.list');
