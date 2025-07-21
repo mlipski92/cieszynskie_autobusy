@@ -38,7 +38,7 @@ class FrontController extends Controller
             payerEmail: $request->email,
             successUrl: config('app.url').'/success',
             errorUrl: config('app.url').'/error',
-            notificationUrl: config('app.url').'/checkstatus',
+            notificationUrl: config('app.url').'order/checkstatus',
         );
         $paymentUrl = $tpayService->createTransaction($transactionData->toArray());
 
