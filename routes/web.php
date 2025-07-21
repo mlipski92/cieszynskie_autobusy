@@ -4,6 +4,7 @@ use App\Http\Controllers\FrontController;
 use App\Livewire\Line\CreateLine;
 use App\Livewire\Line\EditLine;
 use App\Livewire\Line\LineList;
+use App\Livewire\Order\ListOrder;
 use App\Livewire\Stop\CreateStop;
 use App\Livewire\Stop\EditStop;
 use App\Livewire\Stop\StopList;
@@ -136,6 +137,8 @@ Route::get('/', function () {
 
     Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
+
+    Route::get('/order/list', ListOrder::class)->name('order.list');
 
     Route::get('/trans/create', CreateTrans::class)->name('trans.create');
     Route::get('/trans/list', TransList::class)->name('trans.list');

@@ -14,6 +14,7 @@
                     <flux:navlist.item icon="home" :href="route('trans.list')" :current="request()->routeIs('trans.list')" wire:navigate>{{ __('Lista przewoźników') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('stop.list')" :current="request()->routeIs('stop.list')" wire:navigate>{{ __('Lista przystanków') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('line.list')" :current="request()->routeIs('line.list')" wire:navigate>{{ __('Lista linii') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('order.list')" :current="request()->routeIs('order.list')" wire:navigate>{{ __('Lista zamówień') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
