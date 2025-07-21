@@ -13,4 +13,9 @@ class OrderRepository {
     public function updateOrderStatus($id, $newStatus) {
         return Order::findOrFail($id)->update(['status' => $newStatus]);
     }
+    public function getByTitle(string $externalid)
+    {
+        return Order::where('externalid', $externalid)->first();
+    }
+
 }
