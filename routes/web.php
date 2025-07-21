@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\PaymentController;
 use App\Livewire\Line\CreateLine;
 use App\Livewire\Line\EditLine;
 use App\Livewire\Line\LineList;
@@ -139,7 +140,7 @@ Route::get('/', function () {
     Route::redirect('settings', 'settings/profile');
 
     Route::get('/order/list', ListOrder::class)->name('order.list');
-    Route::get('/order/checkstatus', ListOrder::class)->name('order.checkstatus');
+    Route::get('/order/checkstatus', [PaymentController::class, 'checkstatus'])->name('order.checkstatus');
 
     Route::get('/trans/create', CreateTrans::class)->name('trans.create');
     Route::get('/trans/list', TransList::class)->name('trans.list');

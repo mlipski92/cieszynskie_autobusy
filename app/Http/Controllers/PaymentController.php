@@ -6,6 +6,7 @@ use App\DTO\TransactionData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -27,5 +28,8 @@ class PaymentController extends Controller
             return 'Błąd podczas tworzenia transakcji.';
         }
         return redirect()->away($paymentUrl);
+    }
+    public function checkstatus() {
+        Log::info(1231231);
     }
 }

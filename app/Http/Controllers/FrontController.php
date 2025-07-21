@@ -56,4 +56,5 @@ class FrontController extends Controller
 
         return redirect()->away($paymentUrl['transactionPaymentUrl']);
     }
+    
 }

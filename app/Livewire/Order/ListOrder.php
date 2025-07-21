@@ -16,8 +16,4 @@ class ListOrder extends Component
         $orders = $this->orderRepository->getAll();
         return view('livewire.order.list-order', ['orderList' => $orders]);
     }
-
-    public function checkstatus() {
-        Log::info(1231231);
-    }
 }
