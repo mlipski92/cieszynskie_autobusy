@@ -42,7 +42,8 @@ class TpayService
             ->post('https://api.tpay.com/transactions', $transactionData);
 
         $json = $response->json();
+        dd($json);
 
-        return $json['transactionPaymentUrl'] ?? null;
+        return $json ?? null;
     }
 }

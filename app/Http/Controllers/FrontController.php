@@ -7,9 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Services\TpayService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Repositories\OrderRepository;
 
 class FrontController extends Controller
 {
+    protected $orderRepository;
+    public function __contruct(OrderRepository $orderRepository) {
+        $this->orderRepository = $orderRepository;
+    }
     public function buyTicket(Request $request) {
         return view('buyticket', [
             'timeFrom' => $request->query('odjazd'),
@@ -40,6 +45,15 @@ class FrontController extends Controller
         if (!$paymentUrl) {
             return 'Błąd podczas tworzenia transakcji.';
         }
-        return redirect()->away($paymentUrl);
+
+        $this->orderRepository->create([
+            "name" => $request->name,
+            "line" => $request->lineName,
+            "relation" => $request->locationFrom.' - '.$request->locationTo,
+            "cost" => $request->totalCost,
+            "externalid" => null
+        ]);
+
+        return redirect()->away($paymentUrl['transactionPaymentUrl']);
     }
 }
