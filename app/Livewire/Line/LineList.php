@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Line;
 
-use App\Models\Line;
 use App\Repositories\LineRepository;
 use Livewire\Component;
 

@@ -42,9 +42,6 @@ class EditStop extends Component
     {
         $this->validate();
 
-        // $stop = Stop::findOrFail($this->stopId);
-        // $this->stopRepository
-
         $this->stopRepository->update([
             'name' => $this->name, 
             'positionx' => $this->positionx,

@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Line;
 
-use App\Models\Line;
-use App\Models\Trans;
+use App\Factory\LineDataFactory;
 use App\Repositories\LineRepository;
 use Livewire\Component;
 
@@ -13,8 +12,10 @@ class CreateLine extends Component
     public $name;
     public $trans;
     public $direction;
-    public function boot(LineRepository $lineRepository) {
+    protected $lineDataFactory;
+    public function boot(LineRepository $lineRepository, LineDataFactory $lineDataFactory) {
         $this->lineRepository = $lineRepository;
+        $this->lineDataFactory = $lineDataFactory;
     }
     protected function rules() {
         return [
@@ -25,13 +26,9 @@ class CreateLine extends Component
     public function save()
     {
         $this->validate();
+        $lineDto = $this->lineDataFactory->fromArray($this->name, $this->trans, $this->direction);
 
-        $this->lineRepository->create([
-            'name' => $this->name,
-            'trans' => $this->trans,
-            'direction' => $this->direction
-        ]);
-
+        $this->lineRepository->create($lineDto);
 
         session()->flash('message', 'Dodano poprawnie!');
         return redirect()->route('line.list');

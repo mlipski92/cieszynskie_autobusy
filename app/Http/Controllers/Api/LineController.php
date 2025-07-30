@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\LineRepository;
 use App\Repositories\LineStopRelationRepository;
-use App\Services\CalculateTotalCost;
 use App\Services\LineService;
 use App\Services\TotalCostService;
-use Illuminate\Support\Facades\Log;
 
 class LineController extends Controller
 {

@@ -2,13 +2,14 @@
 
 namespace App\Repositories;
 
+use App\DTO\LineData;
 use App\Models\Stop;
 
 class StopRepository implements StopRepositoryInterface {
-    public function create(array $data) {
+    public function create(LineData $data) {
         return Stop::create($data);
     }
-    public function update(array $data, int $id) {
+    public function update(LineData $data, int $id) {
         return Stop::findOrFail($id)->update($data);
     }
     public function findById($id) {

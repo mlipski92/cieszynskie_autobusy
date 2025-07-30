@@ -3,7 +3,6 @@
 namespace App\Livewire\Order;
 
 use App\Repositories\OrderRepository;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class ListOrder extends Component

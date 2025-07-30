@@ -6,7 +6,6 @@ use App\Models\Line;
 use App\Models\LineStopRelation;
 use App\Models\Stop;
 use App\Services\FilterLineStopRelationService;
-use Illuminate\Support\Facades\Log;
 
 class LineStopRelationRepository implements LineStopRelationRepositoryInterface {
     private $filterLineStopRelationService;
@@ -18,7 +17,7 @@ class LineStopRelationRepository implements LineStopRelationRepositoryInterface 
             ->update(['order' => $order]);
     }
     public function createStopLineRelation($data) {
-        return LineStopRelation::create($data);
+        return LineStopRelation::create($data->toArray());
     }
     public function removeStopLineRelation($stopId, $lineId) {
         return LineStopRelation::where('id_line', $lineId)

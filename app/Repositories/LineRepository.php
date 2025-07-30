@@ -2,15 +2,16 @@
 
 namespace App\Repositories;
 
+use App\DTO\LineData;
 use App\Models\Line;
 use App\Models\Trans;
 
 class LineRepository implements StopRepositoryInterface {
-    public function create(array $data) {
-        return Line::create($data);
+    public function create(LineData $data) {
+        return Line::create($data->toArray());
     }
-    public function update(array $data, int $id) {
-        return Line::findOrFail($id)->update($data);
+    public function update(LineData $data, int $id) {
+        return Line::findOrFail($id)->update($data->toArray());
     }
     public function findById($id) {
         return Line::findOrFail($id);

@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\DTO\LineData;
+
 interface StopRepositoryInterface {
-    public function create(array $data);
-    public function update(array $data, int $id);
+    public function create(LineData $data);
+    public function update(LineData $data, int $id);
     public function findById($id);
     public function getAll();
     public function delete($id);

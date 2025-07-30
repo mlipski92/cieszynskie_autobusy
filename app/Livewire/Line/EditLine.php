@@ -2,13 +2,10 @@
 
 namespace App\Livewire\Line;
 
-use App\Models\Line;
-use App\Models\LineStopRelation;
-use App\Models\Stop;
-use App\Models\Trans;
+use App\Factory\LineDataFactory;
+use App\Factory\LineStopRelationFactory;
 use App\Repositories\LineRepository;
 use App\Repositories\LineStopRelationRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
@@ -17,6 +14,8 @@ class EditLine extends Component
 {
     protected $lineRepository;
     protected $lineStopRelationRepository;
+    protected LineDataFactory $lineDataFactory;
+    protected LineStopRelationFactory $lineStopRelationFactory;
     public $lineId;
     public $name;
     public $trans;
@@ -25,9 +24,11 @@ class EditLine extends Component
     public $direction;
     public $times = [];
     protected $listeners = ['updateOrder'];
-    public function boot(LineRepository $lineRepository, LineStopRelationRepository $lineStopRelationRepository) {
+    public function boot(LineRepository $lineRepository, LineStopRelationRepository $lineStopRelationRepository, LineDataFactory $lineDataFactory, LineStopRelationFactory $lineStopRelationFactory) {
         $this->lineRepository = $lineRepository;
         $this->lineStopRelationRepository = $lineStopRelationRepository;
+        $this->lineDataFactory = $lineDataFactory;
+        $this->lineStopRelationFactory = $lineStopRelationFactory;
     }
     public function mount($id)
     {
@@ -47,7 +48,7 @@ public function updateOrder($newOrder)
     session()->flash('success', 'Zmieniono kolejność.');
 }
     public function addStopToLine($id_stop, $id_line, $time, $order, $stopcost) {
-        $this->resetErrorBag(); // wyczyść wcześniejsze błędy
+        $this->resetErrorBag();
 
         $validator = Validator::make(
             ['time' => $time],
@@ -59,14 +60,8 @@ public function updateOrder($newOrder)
             return;
         }
 
-
-        $this->lineStopRelationRepository->createStopLineRelation([
-            'id_stop' => $id_stop,
-            'id_line' => $id_line,
-            'time' => $time,
-            'stopcost' => $stopcost,
-            'order' => $order
-        ]);
+        $stopLineDto = $this->lineStopRelationFactory->fromArray($id_stop, $id_line, $time, $stopcost, $order);
+        $this->lineStopRelationRepository->createStopLineRelation($stopLineDto);
 
         session()->flash('success', 'Przystanek został dodany do linii.');
         return redirect()->route('line.edit', ['id' => $id_line]);
@@ -82,12 +77,9 @@ public function updateOrder($newOrder)
     {
         $this->validate();
 
+        $lineDto = $this->lineDataFactory->fromArray($this->name, $this->trans, $this->direction);
         $line = $this->lineRepository->findById($this->lineId);
-        $line->update([
-            'name' => $this->name, 
-            'trans' => $this->trans,
-            'direction' => $this->direction,
-        ]);
+        $line->update($lineDto->toArray());
 
         session()->flash('message', 'Zaktualizowano poprawnie!');
         return redirect()->route('line.list');
