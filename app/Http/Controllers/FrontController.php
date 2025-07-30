@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\TransactionData;
+use App\DTO\BuyTicketData;
+use App\Factory\OrderDataFactory;
+use App\Factory\TransactionDataFactory;
 use App\Http\Controllers\Controller;
 use App\Services\TpayService;
 use Illuminate\Http\RedirectResponse;
@@ -16,43 +18,23 @@ class FrontController extends Controller
         $this->orderRepository = $orderRepository;
     }
     public function buyTicket(Request $request) {
-        return view('buyticket', [
-            'timeFrom' => $request->query('odjazd'),
-            'timeTo' => $request->query('przyjazd'),
-            'locationFrom' => $request->query('z'),
-            'locationTo' => $request->query('do'),
-            'totalCost' => $request->query('koszt'),
-            'lineName' => $request->query('linia'),
-        ]);
+        $ticketData = BuyTicketData::fromRequest($request);
+        return view('buyticket', $ticketData->toArray());
     }
     public function successPage() {
         return view('success');
     }
     public function checkout(TpayService $tpayService, Request $request): RedirectResponse|string
     {
-        $transactionData = new TransactionData(
-            amount: $request->totalCost,
-            description: 'Relacja '.$request->locationFrom.' - '.$request->locationTo,
-            groupId: 150,
-            payerName: $request->name,
-            payerEmail: $request->email,
-            successUrl: config('app.url').'/success',
-            errorUrl: config('app.url').'/error',
-            notificationUrl: config('app.url').'order/checkstatus',
-        );
+        $transactionData = TransactionDataFactory::fromRequest($request);
         $paymentUrl = $tpayService->createTransaction($transactionData->toArray());
 
         if (!$paymentUrl) {
             return 'Błąd podczas tworzenia transakcji.';
         }
 
-        $this->orderRepository->createOrder([
-            "name" => $request->name,
-            "line" => $request->lineName,
-            "relation" => $request->locationFrom.' - '.$request->locationTo,
-            "cost" => $request->totalCost,
-            "externalid" => 'vvv'
-        ]);
+        $orderData = OrderDataFactory::fromRequest($request);
+        $this->orderRepository->createOrder($orderData);
 
         return redirect()->away($paymentUrl['transactionPaymentUrl']);
     }

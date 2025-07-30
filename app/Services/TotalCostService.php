@@ -13,6 +13,7 @@ class TotalCostService {
                 $totalStopCost += $lineStop->stopcost;
             }
         }
+
         return $totalStopCost;
     }
 }
