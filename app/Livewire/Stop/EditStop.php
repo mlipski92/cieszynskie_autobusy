@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Stop;
 
+use App\Factory\StopFactory;
 use App\Models\Stop;
 use App\Repositories\StopRepository;
 use Livewire\Component;
@@ -15,6 +16,8 @@ class EditStop extends Component
     public $direction;
     private $transRepository;
 
+    private $stopFactory;
+
     public function mount($id)
     {
         $this->stopId = $id;
@@ -25,8 +28,9 @@ class EditStop extends Component
         $this->direction = $stop->direction;
     }
 
-    public function boot(StopRepository $stopRepository) {
+    public function boot(StopRepository $stopRepository, StopFactory $stopFactory) {
         $this->stopRepository = $stopRepository;
+        $this->stopFactory = $stopFactory;
     }
 
     protected function rules() {
@@ -42,12 +46,8 @@ class EditStop extends Component
     {
         $this->validate();
 
-        $this->stopRepository->update([
-            'name' => $this->name, 
-            'positionx' => $this->positionx,
-            'positiony' => $this->positiony,
-            'direction' => $this->direction,
-        ], $this->stopId);
+        $stopDto = $this->stopFactory->fromArray($this->name, $this->positionx, $this->positiony, $this->direction);
+        $this->stopRepository->update($stopDto, $this->stopId);
 
         session()->flash('message', 'Zaktualizowano poprawnie!');
         return redirect()->route('stop.list');

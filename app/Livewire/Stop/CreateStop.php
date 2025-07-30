@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Stop;
 
+use App\Factory\StopFactory;
 use App\Models\Stop;
 use App\Repositories\StopRepository;
 use Livewire\Component;
@@ -13,6 +14,7 @@ class CreateStop extends Component
     public $positiony;
     public $direction;
     private $transRepository;
+    protected $stopFactory;
 
     protected function rules() {
         return [
@@ -22,19 +24,17 @@ class CreateStop extends Component
             'direction' => 'required|string|max:255'
         ];
     }
-    public function boot(StopRepository $stopRepository) {
+    public function boot(StopRepository $stopRepository, StopFactory $stopFactory) {
         $this->stopRepository = $stopRepository;
+        $this->stopFactory = $stopFactory;
     }
     public function save()
     {
         $this->validate();
 
-        $this->stopRepository->create([
-            'name' => $this->name,
-            'positionx' => $this->positionx,
-            'positiony' => $this->positiony,
-            'direction' => $this->direction,
-        ]);
+        $stopDto = $this->stopFactory->fromArray($this->name,$this->positionx,$this->positiony, $this->direction );
+
+        $this->stopRepository->create($stopDto);
 
         session()->flash('message', 'Dodano poprawnie!');
         return redirect()->route('stop.list');

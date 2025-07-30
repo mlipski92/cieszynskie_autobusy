@@ -6,7 +6,7 @@ use App\DTO\LineData;
 use App\Models\Line;
 use App\Models\Trans;
 
-class LineRepository implements StopRepositoryInterface {
+class LineRepository implements LineRepositoryInterface {
     public function create(LineData $data) {
         return Line::create($data->toArray());
     }
